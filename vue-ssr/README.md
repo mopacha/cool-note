@@ -8,18 +8,6 @@ Node.js Web框架，基于 Koa2
 > - SSR: server-side-render，服务端渲染，这里理解为同构应用
 
 
-后端渲染、客户端渲染(CSR)、同构应用(SSR)
-
-> - 后端渲染：服务器直接生成HTML文档并返回给浏览器，但页面交互能力有限。适用于任何后端语言：PHP、Java、Python、GO等。
-> - 客户端渲染：页面初始加载的HTML文档中无内容，需要下载执行JS文件，由浏览器动态生成页面，并通过JS进行页面交互事件与状态管理。
-> - 同构：isomorphic/universal，基于react、vue框架，客户端渲染和服务器端渲染的结合，在服务器端执行一次，用于实现服务器端渲染（首屏直出），在客户端再执行一次，用于接管页面交互，
-
-
-## 优点
-
-- SEO优化
-- 首屏秒开
-
 
 ## 技术栈
 
@@ -33,89 +21,8 @@ Node.js Web框架，基于 Koa2
 - pm2
 - log4js
 
-## 开始使用
 
-1. 安装 node/npm  Node: >=8
-2. clone 模板项目
-	```
-	git clone https://github.com/mopacha/vue-ssr-admin.git
-	```
 
-3. 启动
-
-	```
-	npm install
-	npm start 
-	```
-
-## 目录结构
-
-```bash
-vue-ssr-admin
-.
-├── app.config.js # 端口、代理配置、webpack配置等等
-├── babel.config.js # babel配置
-├── build
-│   ├── webpack.base.config.js # 基本配置 (base config) 
-│   ├── webpack.client.config.js # 客户端配置 (client config)
-│   └── webpack.server.config.js # 服务器配置 (server config)
-├── config
-│   ├── default.js # 环境变量配置
-│   ├── development.js # 开发环境变量配置
-│   └── log4js.js # 日志写入配置
-├── eslintrc.conf.js # eslint配置
-├── LICENSE
-├── package.json
-├── package-lock.json
-├── pm2.config.js  # 项目pm2配置
-├── pm2.md # pm2的api文档
-├── postcss.config.js  postcss配置文件
-├── public
-│   ├── favicon.ico #网站图标
-│   └── libs #
-├── README.md # 文档
-├── server # 服务端代码
-│   ├── dev-hot.js # koa2开发模式实现hot热更新
-│   ├── index.js # server入口
-│   ├── middleware # koa server 中间件
-│   ├── server.js # koa2服务详细配置
-│   └── ssr.js # vue ssr的koa2中间件。匹配路由、请求接口生成dom，实现SSR
-└── src
-```
-
-```bash
-.src
-├── api
-│   └── index.js # 接口api
-├── app.js  # 通用 entry
-├── App.vue
-├── assets  # css、images等静态资源目录
-├── components # 项目自定义组件目录
-├── config.js # vue组件、mixins注册
-├── element-ui
-│   └── index.js # element ui组件按需加载
-├── entry-client.js # 仅运行于浏览器
-├── entry-server.js # 仅运行于服务器
-├── http
-│   ├── getErrMsg.js # 客户端请求错误处理
-│   ├── index-client.js # 客户端http 请求封装
-│   ├── index-server.js # 服务端http 请求封装
-│   └── README.md
-├── icons
-│   ├── index.js  # svg 图标引入封装
-│   ├── svg
-│   └── svgo.yml
-├── index.template.ejs  # index模板
-├── lang  # 国际化语音配置
-├── layout # vue 项目模板
-├── pages # 业务视图.vue和route路由目录
-├── router # 路由route配
-├── settings.js
-├── store # vuex数据存储目录
-├── styles
-└── util # 工具目录
-
-```
 
 
 ## 构建
@@ -136,63 +43,7 @@ vue-ssr-admin
 
 
 
-## app.config.js 
 
-应用的相关配置文件，包括webpack的差异化配置、请求代理配置
-
-### 配置实例
-
-```js
-//app配置
-const path = require('path')
-const conf = require('./config/default')
-const devConf = require('./config/development')
-const isProd = process.env.NODE_ENV === 'production'
-
-module.exports = {
-	staticHost: isProd ? conf.staticHost : devConf.staticHost,
-	staticPath: isProd ? conf.staticPath : devConf.staticPath,
-	//webpack的差异化配置
-	webpack: {
-		entry: {
-      app: path.join(__dirname, 'src/app.js'), // 入口
-    },
-		resolveAlias: {
-			// 自定义Alias设置
-		}
-	},
-	appPort: process.env.PORT,//主服务启动端口
-	//代理配置，可支持多个代理，key为前缀，命中后，会把前缀去掉，转发到代理服务器
-	proxy: {
-		'/fastApp': isProd ? conf.apiHost : devConf.apiHost,
-		'/waterApp': isProd ? conf.apiHost2 : devConf.apiHost2,
-		'/bahasaApp': isProd ? conf.apiHost3 : devConf.apiHost3
-	}
-}
-
-```
-
-## 配置管理
-项目采用`config`来管理项⽬中的配置。[更多文档](https://github.com/lorenwest/node-config) 
-
-对应 config 目录下。
-
-```bash
-├── config # 项目配置文件目录
-    ├── default.js # 默认配置
-    ├── development.js # 开发环境配置
-    └── log4js.js # log4js 配置项
-```
-
-### default.js
-默认配置。
-
-### development.js
-开发配置，在开发模式时，覆盖默认配置项。
-
-### log4js.js
-
-log4js 配置，更多参考[log4js使用文档](https://github.com/log4js-node/log4js-node)
 
 
 
